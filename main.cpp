@@ -6,8 +6,8 @@
 #include <QJsonObject>
 #include <QJsonValue>
 
-void modifyJsonValue(QJsonValue &destValue, const QString& path, const QJsonValue& newValue);
-void modifyJsonValue(QJsonDocument& doc, const QString& path, const QJsonValue& newValue);
+void modifyJsonValue(QJsonValue &destValue, const QString& path, const QJsonValue& newValue = QJsonValue());
+void modifyJsonValue(QJsonDocument& doc, const QString& path, const QJsonValue& newValue = QJsonValue());
 
 int main(int argc, char *argv[])
 {
@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
                       })";
     QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(sampleJson));
 
+    //modify or add value
     modifyJsonValue(doc, "firstName", QJsonValue("Natalia"));
     modifyJsonValue(doc, "age", 22);
     modifyJsonValue(doc, "address.state", "None");
@@ -69,6 +70,9 @@ int main(int argc, char *argv[])
     modifyJsonValue(doc, "family[0][2]", "Bill");
     modifyJsonValue(doc, "family[1][1]", "Winston");
     modifyJsonValue(doc, "family[2].father.age", 56);
+
+    //remove value
+    modifyJsonValue(doc, "family[1][2]");
 
     return a.exec();
 }
@@ -143,13 +147,19 @@ void modifyJsonValue(QJsonValue& destValue, const QString& path, const QJsonValu
     if (destValue.isArray())
     {
         QJsonArray arr = destValue.toArray();
-        arr[arrayIndex] = subValue;
+        if (subValue.isNull())
+            arr.removeAt(arrayIndex);
+        else
+            arr[arrayIndex] = subValue;
         destValue = arr;
     }
     else if (destValue.isObject())
     {
         QJsonObject obj = destValue.toObject();
-        obj[usedPropertyName] = subValue;
+        if (subValue.isNull())
+            obj.remove(usedPropertyName);
+        else
+            obj[usedPropertyName] = subValue;
         destValue = obj;
     }
     else
