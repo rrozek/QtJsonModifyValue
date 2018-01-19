@@ -9,4 +9,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    json.cpp
+
+HEADERS += \
+    json.h
