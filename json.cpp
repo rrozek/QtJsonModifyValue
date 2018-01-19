@@ -1,14 +1,9 @@
 #include "json.h"
 
 bool Json::debugMode = false;
-bool Json::strictMode = false;
 
 void Json::setDebugMode(bool debugMode) {
     Json::debugMode = debugMode;
-}
-
-void Json::setStrictMode(bool strictMode) {
-    Json::strictMode = strictMode;
 }
 
 bool Json::modifyJsonValue(QJsonValue &destValue, const QString &path, const QJsonValue &newValue) {
@@ -107,12 +102,12 @@ bool Json::modifyJsonValue(QJsonValue &destValue, const QString &path, const QJs
         returnValue = true;
     } else {
         if (subValue.isArray() || subValue.isObject()) { // is subValue is array or object continue deeper in path
-            returnValue = modifyJsonValue(subValue,usedSubPath,newValue);
+            returnValue = modifyJsonValue(subValue, usedSubPath, newValue);
         } else if (subValue.isUndefined()) { // if subValue is undefined continue deeper in path only if am i assigning newValue
             if (newValue.isUndefined()) { // if newValue is undefined i do not need to go deeper to remove key at path because the subpath does not exist
                 return false; // no need to delete value at requested path, the subpath does not exist
             } else { // continue deeper in path and create all path keys until end
-                returnValue = modifyJsonValue(subValue,usedSubPath,newValue);
+                returnValue = modifyJsonValue(subValue, usedSubPath, newValue);
             }
         } else { // subValue is value and subPath is not empty, i cannot go deeper in requested pat, error
             if (usedPropertyName.isEmpty()) {
