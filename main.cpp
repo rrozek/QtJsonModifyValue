@@ -32,7 +32,9 @@ public:
         bool ok;
         const int arrayIndex = path.mid(indexOfSquareBracketOpen + 1, indexOfSquareBracketClose - indexOfSquareBracketOpen - 1).toInt(&ok);
         if (indexOfSquareBracketClose > 0 && !ok) {
-            qDebug() << "Wrong array index:" << path.mid(indexOfSquareBracketOpen, indexOfSquareBracketClose - indexOfSquareBracketOpen + 1);
+            if (debugMode) {
+                qDebug() << "Wrong array index:" << path.mid(indexOfSquareBracketOpen, indexOfSquareBracketClose - indexOfSquareBracketOpen + 1);
+            }
             return;
         }
 
@@ -72,14 +74,18 @@ public:
                 }
                 subValue = destValue.toArray().at(arrayIndex);
             } else { // if usedPropertyName is not empty, there is an error in requested path
-                qDebug() << "Current QJqueryValue is Array:" << destValue;
-                qDebug() << "You requested JSON object with key:" << usedPropertyName;
+                if (debugMode) {
+                    qDebug() << "Current QJqueryValue is Array:" << destValue;
+                    qDebug() << "You requested JSON object with key:" << usedPropertyName;
+                }
                 return;
             }
         } else if (destValue.isObject()) { // if current QJsonValue is object then usedPropertyName should not be emty
             if (usedPropertyName.isEmpty()) { // if usedPropertyName is empty, there is an error in requested path
-                qDebug() << "Current QJqueryValue is Object:" << destValue;
-                qDebug() << "You requested JSON array with key:" << path.mid(indexOfSquareBracketOpen, indexOfSquareBracketClose - indexOfSquareBracketOpen + 1);
+                if (debugMode) {
+                    qDebug() << "Current QJqueryValue is Object:" << destValue;
+                    qDebug() << "You requested JSON array with key:" << path.mid(indexOfSquareBracketOpen, indexOfSquareBracketClose - indexOfSquareBracketOpen + 1);
+                }
                 return;
             } else {
                 subValue = destValue.toObject().value(usedPropertyName);
@@ -117,12 +123,16 @@ public:
                 }
             } else { // subValue is value and subPath is not empty, i cannot go deeper in requested pat, error
                 if (usedPropertyName.isEmpty()) {
-                    qDebug() << "Current QJqueryValue is Value:" << subValue;
-                    qDebug() << "You requested JSON array with key:" << path.mid(indexOfSquareBracketOpen, indexOfSquareBracketClose - indexOfSquareBracketOpen + 1);
+                    if (debugMode) {
+                        qDebug() << "Current QJqueryValue is Value:" << subValue;
+                        qDebug() << "You requested JSON array with key:" << path.mid(indexOfSquareBracketOpen, indexOfSquareBracketClose - indexOfSquareBracketOpen + 1);
+                    }
                     return;
                 } else {
-                    qDebug() << "Current QJqueryValue is Value:" << subValue;
-                    qDebug() << "You requested JSON object with key:" << usedPropertyName;
+                    if (debugMode) {
+                        qDebug() << "Current QJqueryValue is Value:" << subValue;
+                        qDebug() << "You requested JSON object with key:" << usedPropertyName;
+                    }
                     return;
                 }
             }
