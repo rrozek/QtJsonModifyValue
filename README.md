@@ -53,7 +53,9 @@ For each example I will use this JSON object as my QJsonDocument `doc`.
 2. Access array elements just like in c++: `family[3]`.
 3. You cannot use dots in object names // I'm working on it
 
-### Adding value
+### Adding value / Changing value
+**If the value already exist it will be changed, otherwise added.**
+
 If you want to add value to JSON, use `modifyJsonValue(QJsonValue &destValue, const QString &path, const QJsonValue &newValue)` or `modifyJsonValue(QJsonDocument &doc, const QString &path, const QJsonValue &newValue)`:
 ```
 modifyJsonValue(doc, "phoneNumber[2]", QJsonObject()); // returns true
@@ -87,9 +89,6 @@ This will change the array to this:
     "George"
 ]
 ```
-
-### Changing value
-Changing value is the same as adding with the same rules. If the value already exist it will be changed, otherwice added.
 
 ### Removing value from array / Removing key-value from object
 If you want to remove value from JSON, just use `modifyJsonValue(QJsonValue &destValue, const QString &path)` or `modifyJsonValue(QJsonDocument &doc, const QString &path)` without the `newValue` argument:
