@@ -93,91 +93,87 @@ void modifyJsonValue(QJsonValue& destValue, const QString& path, const QJsonValu
 
     // determine what is first in path. dot or bracket
     bool useDot = true;
-    if (indexOfDot >= 0) // there is a dot in path
-    {
-        if (indexOfSquareBracketOpen >= 0) // there is squarebracket in path
-        {
-            if (indexOfDot > indexOfSquareBracketOpen)
+    if (indexOfDot >= 0) { // there is a dot in path
+        if (indexOfSquareBracketOpen >= 0) { // there is squarebracket in path
+            if (indexOfDot > indexOfSquareBracketOpen) {
                 useDot = false;
-            else
+            } else {
                 useDot = true;
-        }
-        else
+            }
+        } else {
             useDot = true;
-    }
-    else
-    {
-        if (indexOfSquareBracketOpen >= 0)
+        }
+    } else {
+        if (indexOfSquareBracketOpen >= 0) {
             useDot = false;
-        else
-            useDot = true; // acutally, id doesn't matter, both dot and square bracket don't exist
+        } else {
+            useDot = true;    // acutally, id doesn't matter, both dot and square bracket don't exist
+        }
     }
 
     QString usedPropertyName = useDot ? dotPropertyName : squareBracketPropertyName;
     QString usedSubPath = useDot ? dotSubPath : squareBracketSubPath;
 
     QJsonValue subValue;
-    if (destValue.isArray())
+    if (destValue.isArray()) {
         subValue = destValue.toArray()[usedPropertyName.toInt()];
-    else if (destValue.isObject())
+    } else if (destValue.isObject()) {
         subValue = destValue.toObject()[usedPropertyName];
-    else
+    } else {
         qDebug() << "oh, what should i do now with the following value?! " << destValue;
-
-    if(usedSubPath.isEmpty())
-    {
-        subValue = newValue;
     }
-    else
-    {
-        if (subValue.isArray())
-        {
+
+    if(usedSubPath.isEmpty()) {
+        subValue = newValue;
+    } else {
+        if (subValue.isArray()) {
             QJsonArray arr = subValue.toArray();
             QJsonValue arrEntry = arr[arrayIndex];
-            modifyJsonValue(arrEntry,usedSubPath,newValue);
+            modifyJsonValue(arrEntry, usedSubPath, newValue);
             arr[arrayIndex] = arrEntry;
             subValue = arr;
-        }
-        else if (subValue.isObject())
-            modifyJsonValue(subValue,usedSubPath,newValue);
-        else
+        } else if (subValue.isObject()) {
+            modifyJsonValue(subValue, usedSubPath, newValue);
+        } else {
             subValue = newValue;
+        }
     }
 
-    if (destValue.isArray())
-    {
+    if (destValue.isArray()) {
         QJsonArray arr = destValue.toArray();
-        if (subValue.isNull())
+        if (subValue.isNull()) {
             arr.removeAt(arrayIndex);
-        else
+        } else {
             arr[arrayIndex] = subValue;
+        }
         destValue = arr;
-    }
-    else if (destValue.isObject())
-    {
+    } else if (destValue.isObject()) {
         QJsonObject obj = destValue.toObject();
-        if (subValue.isNull())
+        if (subValue.isNull()) {
             obj.remove(usedPropertyName);
-        else
+        } else {
             obj[usedPropertyName] = subValue;
+        }
         destValue = obj;
-    }
-    else
+    } else {
         destValue = newValue;
+    }
 }
 
 void modifyJsonValue(QJsonDocument& doc, const QString& path, const QJsonValue& newValue)
 {
     QJsonValue val;
-    if (doc.isArray())
+    if (doc.isArray()) {
         val = doc.array();
-    else
+    } else {
         val = doc.object();
+    }
 
-    modifyJsonValue(val,path,newValue);
+    modifyJsonValue(val, path, newValue);
 
-    if (val.isArray())
+    if (val.isArray()) {
         doc = QJsonDocument(val.toArray());
-    else
+    } else {
         doc = QJsonDocument(val.toObject());
+    }
 }
