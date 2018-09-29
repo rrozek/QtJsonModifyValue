@@ -12,55 +12,55 @@ void modifyJsonValue(QJsonDocument& doc, const QString& path, const QJsonValue& 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    std::string sampleJson = R"({
-                          "firstName": "John",
-                          "lastName": "Smith",
-                          "age": 25,
-                          "address":
-                          {
-                              "streetAddress": "21 2nd Street",
-                              "city": "New York",
-                              "state": "NY",
-                              "postalCode": "10021"
-                          },
-                          "phoneNumber":
-                          [
-                              {
-                                "type": "home",
-                                "number": "212 555-1234"
-                              },
-                              {
-                                "type": "fax",
-                                "number": "646 555-4567"
-                              }
-                          ],
-                          "family":
-                          [
-                              [
-                                  "Jeff",
-                                  "Marika",
-                                  "Tony"
-                              ],
-                              [
-                                  "Steve",
-                                  "Sonny",
-                                  "Sally"
-                              ],
-                              {
-                                  "father":
-                                  {
-                                      "name": "Mike",
-                                      "age": 55
-                                  },
-                                  "mother":
-                                  {
-                                      "name": "Jennifer",
-                                      "age": 49
-                                  }
-                              }
-                          ]
-                      })";
-    QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(sampleJson));
+    QJsonDocument doc = QJsonDocument::fromJson(
+                            QByteArrayLiteral(R"({
+                                "firstName": "John",
+                                "lastName": "Smith",
+                                "age": 25,
+                                "address":
+                                {
+                                    "streetAddress": "21 2nd Street",
+                                    "city": "New York",
+                                    "state": "NY",
+                                    "postalCode": "10021"
+                                },
+                                "phoneNumber":
+                                [
+                                    {
+                                    "type": "home",
+                                    "number": "212 555-1234"
+                                    },
+                                    {
+                                    "type": "fax",
+                                    "number": "646 555-4567"
+                                    }
+                                ],
+                                "family":
+                                [
+                                    [
+                                        "Jeff",
+                                        "Marika",
+                                        "Tony"
+                                    ],
+                                    [
+                                        "Steve",
+                                        "Sonny",
+                                        "Sally"
+                                    ],
+                                    {
+                                        "father":
+                                        {
+                                            "name": "Mike",
+                                            "age": 55
+                                        },
+                                        "mother":
+                                        {
+                                            "name": "Jennifer",
+                                            "age": 49
+                                        }
+                                    }
+                                ]
+                            })"));
 
     //modify or add value
     modifyJsonValue(doc, "firstName", QJsonValue("Natalia"));
