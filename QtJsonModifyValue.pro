@@ -1,12 +1,10 @@
-QT += core
+TARGET = QtJsonModifyValue
+TEMPLATE = app
+
 QT -= gui
 
-CONFIG += c++11
-
-TARGET = QtJsonModifyValue
-CONFIG += console
-CONFIG -= app_bundle
-
-TEMPLATE = app
+CONFIG += \
+    c++11 \
+    console \
 
 SOURCES += main.cpp
